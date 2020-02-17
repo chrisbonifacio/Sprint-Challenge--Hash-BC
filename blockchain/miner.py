@@ -1,5 +1,6 @@
 import hashlib
 import requests
+import json
 
 import sys
 
@@ -25,6 +26,13 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
+    block_string = json.dumps(last_proof, sort_keys=True).encode()
+    last_hash = hashlib.sha256(block_string).hexdigest()
+
+    while not valid_proof(last_hash, proof):
+        print("LAST PROOF:", last_proof)
+        print("NEW PROOF:", new_proof)
+        proof += 1
 
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
@@ -40,7 +48,13 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    guess = f"{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+
+    if last_hash[-6:] == guess_hash[:6]:
+        print(guess_hash)
+
+    return last_hash[-6:] == guess_hash[:6]
 
 
 if __name__ == '__main__':

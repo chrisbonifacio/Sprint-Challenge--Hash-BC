@@ -10,6 +10,9 @@ class Ticket:
     def __init__(self, source, destination):
         self.source = source
         self.destination = destination
+        
+    def __repr__(self):
+        return f"[source: {self.source}, dest: {self.destination}]"
 
 
 def reconstruct_trip(tickets, length):
@@ -19,5 +22,22 @@ def reconstruct_trip(tickets, length):
     """
     YOUR CODE HERE
     """
-
-    pass
+    route = []
+    # build hash table
+    for ticket in tickets:
+        hash_table_insert(hashtable, ticket.source, ticket.destination)
+    
+    # get the first ticket, source of "NONE", destination should be "LAX"
+    current = "NONE"
+    
+    while True:
+        route.append(hash_table_retrieve(hashtable, current))
+        current = hash_table_retrieve(hashtable, current)
+        if current is "NONE":
+            route.pop()
+            break
+        
+    print("ROUTE", route)
+    
+    return route
+        
